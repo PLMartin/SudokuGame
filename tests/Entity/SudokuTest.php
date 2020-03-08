@@ -11,31 +11,53 @@ class SudokuTest extends TestCase
 
     public function difficultyProvider()
     {
-        yield ['level' => 1, 'filledCells' => 50];
-        yield ['level' => 2, 'filledCells' => 40];
-        yield ['level' => 3, 'filledCells' => 30];
+        yield [1, 50];
+        yield [2, 40];
+        yield [3, 30];
     }
 
     /**
      * @param $difficulty
+     * @param $numberOfFilledCells
      * @dataProvider difficultyProvider
      */
-    public function testNumberOfFilledCellsAfterInitializing(array $difficulty)
+    public function testNumberOfFilledCellsAfterInitializing($difficulty, $numberOfFilledCells)
     {
         $sudoku = new Sudoku();
-        $sudoku->initializeGame($difficulty['level']);
-        $this->assertEquals($difficulty['filledCells'], $sudoku->getNumberOfEmptyCells());
+        $sudoku->initializeGame($difficulty);
+        $this->assertEquals(81 - $numberOfFilledCells, $sudoku->getNumberOfEmptyCells());
 
-        $numberOfFilledCells = 0;
+        $count = 0;
         foreach($sudoku->getData() as $lines) {
             foreach ($lines as $cell) {
                 if ($cell > 0 && $cell < 10) {
-                    $numberOfFilledCells += 1;
+                    $count += 1;
                 }
             }
         }
 
-        $this->assertEquals($difficulty['filledCells'], $numberOfFilledCells);
+        $this->assertEquals(81 - $numberOfFilledCells, $count);
+    }
+
+
+
+    public function wrongDifficultyProvider()
+    {
+        yield [0];
+        yield [4];
+        yield [-1];
+    }
+
+
+    /**
+     * @expectedException \Exception
+     * @dataProvider wrongDifficultyProvider
+     * @param $difficulty
+     */
+    public function testInvalidDifficulty($difficulty)
+    {
+        $sudoku = new Sudoku();
+        $sudoku->initializeGame($difficulty);
     }
 
 }
