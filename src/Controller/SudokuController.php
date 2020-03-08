@@ -8,7 +8,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class SudokuController extends AbstractController
 {
     /**
-     * @Route("/sudoku", name="sudoku")
+     * @Route("/", name="home")
      */
     public function index()
     {

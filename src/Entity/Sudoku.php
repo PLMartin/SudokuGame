@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use App\ValueObject\Difficuly;
+use Doctrine\DBAL\Types\TimeType;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -27,7 +29,7 @@ class Sudoku
     private $numberOfEmptyCells;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="integer")
      */
     private $difficulty;
 
@@ -35,6 +37,7 @@ class Sudoku
      * @ORM\Column(type="time")
      */
     private $time;
+
 
     public function getId(): ?int
     {
@@ -70,13 +73,6 @@ class Sudoku
         return $this->difficulty;
     }
 
-    public function setDifficulty(string $difficulty): self
-    {
-        $this->difficulty = $difficulty;
-
-        return $this;
-    }
-
     public function getTime(): ?\DateTimeInterface
     {
         return $this->time;
@@ -88,4 +84,14 @@ class Sudoku
 
         return $this;
     }
+
+
+    public function initializeGame(int $difficulty): void
+    {
+
+
+    }
+
+
+
 }
