@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 class SudokuTest extends TestCase
 {
 
-    public function difficultyProvider()
+    public function validDifficultyProvider()
     {
         yield [1, 50];
         yield [2, 40];
@@ -19,13 +19,14 @@ class SudokuTest extends TestCase
     /**
      * @param $difficulty
      * @param $numberOfFilledCells
-     * @dataProvider difficultyProvider
+     * @dataProvider validDifficultyProvider
      */
-    public function testNumberOfFilledCellsAfterInitializing($difficulty, $numberOfFilledCells)
+    public function testInitializeWithValidDifficulty($difficulty, $numberOfFilledCells)
     {
         $sudoku = new Sudoku();
         $sudoku->initializeGame($difficulty);
         $this->assertEquals(81 - $numberOfFilledCells, $sudoku->getNumberOfEmptyCells());
+        $this->assertEquals($difficulty, $sudoku->getDifficulty());
 
         $count = 0;
         foreach($sudoku->getData() as $lines) {
@@ -38,6 +39,8 @@ class SudokuTest extends TestCase
 
         $this->assertEquals(81 - $numberOfFilledCells, $count);
     }
+
+
 
 
 
@@ -54,7 +57,7 @@ class SudokuTest extends TestCase
      * @dataProvider wrongDifficultyProvider
      * @param $difficulty
      */
-    public function testInvalidDifficulty($difficulty)
+    public function testInitializeWithInvalidDifficulty($difficulty)
     {
         $sudoku = new Sudoku();
         $sudoku->initializeGame($difficulty);
