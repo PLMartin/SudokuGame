@@ -20,13 +20,16 @@ class SudokuTest extends TestCase
      * @param $difficulty
      * @param $numberOfFilledCells
      * @dataProvider validDifficultyProvider
+     * @throws \Exception
      */
     public function testInitializeWithValidDifficulty($difficulty, $numberOfFilledCells)
     {
         $sudoku = new Sudoku();
         $sudoku->initializeGame($difficulty);
-        $this->assertEquals(81 - $numberOfFilledCells, $sudoku->getNumberOfEmptyCells());
-        $this->assertEquals($difficulty, $sudoku->getDifficulty());
+        $errorMessage = "Le nombre de cellules vides est incorrect pour la difficulté: ${difficulty}";
+        $this->assertEquals(81 - $numberOfFilledCells, $sudoku->getNumberOfEmptyCells(), $errorMessage);
+        $errorMessage = "La difficulté n'a pas été enregistré dans l'instance";
+        $this->assertEquals($difficulty, $sudoku->getDifficulty(), $errorMessage);
 
         $count = 0;
         foreach($sudoku->getData() as $lines) {
@@ -37,7 +40,8 @@ class SudokuTest extends TestCase
             }
         }
 
-        $this->assertEquals(81 - $numberOfFilledCells, $count);
+        $errorMessage = "Le nombre de cellules vides générées est incorrect pour la difficulté: ${difficulty}";
+        $this->assertEquals($numberOfFilledCells, $count, $errorMessage);
     }
 
 

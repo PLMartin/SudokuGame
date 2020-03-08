@@ -86,12 +86,61 @@ class Sudoku
     }
 
 
+    /**
+     * @param int $difficulty
+     * @throws \Exception
+     */
     public function initializeGame(int $difficulty): void
     {
+        $this->difficulty = $difficulty;
+        switch ($difficulty) {
+            case 1:
+                $this->numberOfEmptyCells = 81 - 50;
+                $this->generateGame(50);
+                break;
+            case 2:
+                $this->numberOfEmptyCells = 81 - 40;
+                $this->generateGame(40);
+                break;
+            case 3:
+                $this->numberOfEmptyCells = 81 - 30;
+                $this->generateGame(30);
+                break;
+            default:
+                throw new \Exception("La difficulté est invalide.");
+        }
+
+
+
+
 
 
     }
 
+
+    private function generateGame(int $numberOfFilledCells)
+    {
+        $table = [];
+        for ($i = 1; $i < 10; $i++) {
+            array_push($table, $i);
+        }
+
+        for ($i = 0; $i < 9; $i++) {
+            shuffle($table);
+            for ($j = 0; $j < 9; $j++) {
+                $this->data[$i][$j] = $table[$j];
+                $numberOfFilledCells -= 1;
+                if ($numberOfFilledCells === 0) {
+                    break;
+                }
+            }
+            if ($numberOfFilledCells === 0) {
+                break;
+            }
+        }
+
+
+    }
 
 
 }
