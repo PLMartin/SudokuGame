@@ -2,8 +2,6 @@
 
 namespace App\Entity;
 
-use App\ValueObject\Difficuly;
-use Doctrine\DBAL\Types\TimeType;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -11,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Sudoku
 {
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -39,6 +38,7 @@ class Sudoku
     private $time;
 
 
+
     public function getId(): ?int
     {
         return $this->id;
@@ -49,23 +49,10 @@ class Sudoku
         return $this->data;
     }
 
-    public function setData(array $data): self
-    {
-        $this->data = $data;
-
-        return $this;
-    }
 
     public function getNumberOfEmptyCells(): ?int
     {
         return $this->numberOfEmptyCells;
-    }
-
-    public function setNumberOfEmptyCells(int $numberOfEmptyCells): self
-    {
-        $this->numberOfEmptyCells = $numberOfEmptyCells;
-
-        return $this;
     }
 
     public function getDifficulty(): ?string
@@ -81,7 +68,6 @@ class Sudoku
     public function setTime(\DateTimeInterface $time): self
     {
         $this->time = $time;
-
         return $this;
     }
 
@@ -133,13 +119,24 @@ class Sudoku
                 break;
             }
         }
-
-
     }
 
 
     public function play(int $x, int $y, int $value): void
     {
+        if ($value < 1 || $value > 9) {
+            throw new \LogicException("La valeur entrée doit etre comprise entre 1 et 9 : ${value}");
+        }
+
+        if ($x > 8 || $x < 0 || $y > 8 || $y < 0) {
+            throw new \LogicException("Impossible de jouer en (${x} ${y}), coordonnées incorrects.");
+        }
+
+        if ($this->data[$x][$y] !== null) {
+            throw new \LogicException("Impossible de jouer, la cellule (${x} ${y}) n'est pas vide.");
+        }
+
+        $this->data[$x][$y] = $value;
 
     }
 

@@ -46,8 +46,6 @@ class SudokuTest extends TestCase
 
 
 
-
-
     public function wrongDifficultyProvider()
     {
         yield [0];
@@ -96,6 +94,7 @@ class SudokuTest extends TestCase
     public function testPlayTwiceOnTheSameCell()
     {
         $sudoku = new Sudoku();
+        $sudoku->initializeGame(1);
         $sudoku->play(0, 0, 1);
         $sudoku->play(0, 0, 1);
     }
