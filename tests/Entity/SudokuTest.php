@@ -67,4 +67,58 @@ class SudokuTest extends TestCase
         $sudoku->initializeGame($difficulty);
     }
 
+
+
+    public function wrongPositionProvider()
+    {
+        yield [-1, 0];
+        yield [0, -1];
+        yield [9, 0];
+        yield [0, 9];
+    }
+
+    /**
+     * @param $x
+     * @param $y
+     * @dataProvider wrongPositionProvider
+     * @expectedException \LogicException
+     */
+    public function testPlayWrongPosition($x, $y)
+    {
+        $sudoku = new Sudoku();
+        $sudoku->play($x, $y, 1);
+    }
+
+
+    /**
+     * @expectedException \LogicException
+     */
+    public function testPlayTwiceOnTheSameCell()
+    {
+        $sudoku = new Sudoku();
+        $sudoku->play(0, 0, 1);
+        $sudoku->play(0, 0, 1);
+    }
+
+
+    public function wrongValueProvider()
+    {
+        yield [-1];
+        yield [0];
+        yield [10];
+    }
+
+
+    /**
+     * @dataProvider wrongValueProvider
+     * @expectedException \LogicException
+     * @param $value
+     */
+    public function testPlayWrongValue($value)
+    {
+        $sudoku = new Sudoku();
+        $sudoku->play(0, 0, $value);
+    }
+
+
 }

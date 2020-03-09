@@ -110,11 +110,6 @@ class Sudoku
                 throw new \Exception("La difficulté est invalide.");
         }
 
-
-
-
-
-
     }
 
 
@@ -141,6 +136,15 @@ class Sudoku
 
 
     }
+
+
+    public function play(int $x, int $y, int $value): void
+    {
+
+    }
+
+
+
 
 
 }
