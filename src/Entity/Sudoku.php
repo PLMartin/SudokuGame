@@ -38,6 +38,14 @@ class Sudoku
     private $time;
 
 
+    public function __construct()
+    {
+        for ($i = 0; $i < 9; $i++) {
+            for ($j = 0; $j < 9; $j++) {
+                $this->data[$i][$j] = null;
+            }
+        }
+    }
 
     public function getId(): ?int
     {
@@ -78,7 +86,7 @@ class Sudoku
      */
     public function initializeGame(int $difficulty): void
     {
-        $this->difficulty = $difficulty;
+
         switch ($difficulty) {
             case 1:
                 $this->numberOfEmptyCells = 81 - 50;
@@ -95,6 +103,7 @@ class Sudoku
             default:
                 throw new \Exception("La difficulté est invalide.");
         }
+        $this->difficulty = $difficulty;
 
     }
 
@@ -124,6 +133,7 @@ class Sudoku
 
     public function play(int $x, int $y, int $value): void
     {
+
         if ($value < 1 || $value > 9) {
             throw new \LogicException("La valeur entrée doit etre comprise entre 1 et 9 : ${value}");
         }
@@ -137,17 +147,59 @@ class Sudoku
         }
 
         $this->data[$x][$y] = $value;
-
     }
-
-
 
 
     public function verifyCell(int $x, int $y, int $value): bool
     {
+        return $this->verifyBlock($x, $y, $value) &&
+            $this->verifyColumn($x, $y, $value) &&
+            $this->verifyLine($x, $y, $value);
+    }
+
+    private function verifyBlock(int $x, int $y, int $value)
+    {
+        for ($i = intdiv($x, 3) * 3; $i < intdiv($x, 3) * 3 + 3; $i++) {
+            for ($j = intdiv($y, 3) * 3; $j < intdiv($y, 3) * 3 + 3; $j++) {
+                if ($i === $x && $j === $y) {
+                    continue;
+                }
+                if ($this->data[$i][$j] === $value) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+
+    private function verifyLine(int $x, int $y, int $value): bool
+    {
+        for ($i = 0; $i < 9; $i++) {
+            if ($i === $x) {
+                continue;
+            }
+            if ($this->data[$i][$y] === $value) {
+                return false;
+            }
+        }
+        return true;
 
     }
 
+    private function verifyColumn(int $x, int $y, int $value)
+    {
+        for ($j = 0; $j < 9; $j++) {
+            if ($j === $y) {
+                continue;
+            }
+            if ($this->data[$x][$j] === $value) {
+                return false;
+            }
+        }
+        return true;
+
+    }
 
 
 }
