@@ -143,5 +143,11 @@ class Sudoku
 
 
 
+    public function verifyCell(int $x, int $y, int $value): bool
+    {
+
+    }
+
+
 
 }

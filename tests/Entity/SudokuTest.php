@@ -120,4 +120,29 @@ class SudokuTest extends TestCase
     }
 
 
+
+    public function testVerifyCellAlreadyInLine()
+    {
+        $sudoku = new Sudoku();
+        $sudoku->play(0, 0, 1);
+        $this->assertFalse($sudoku->verifyCell(8, 0, 1));
+    }
+
+    public function testVerifyCellAlreadyInColumn()
+    {
+        $sudoku = new Sudoku();
+        $sudoku->play(0, 0, 1);
+        $this->assertFalse($sudoku->verifyCell(0, 8, 1));
+    }
+
+    public function testVerifyCellAlreadyInBlock()
+    {
+        $sudoku = new Sudoku();
+        $sudoku->play(0, 0, 1);
+        $this->assertFalse($sudoku->verifyCell(2, 2, 1));
+
+        $sudoku->play(8, 8, 1);
+        $this->assertFalse($sudoku->verifyCell(7, 7, 1));
+    }
+
 }
