@@ -19,32 +19,13 @@ class SudokuRepository extends ServiceEntityRepository
         parent::__construct($registry, Sudoku::class);
     }
 
-    // /**
-    //  * @return Sudoku[] Returns an array of Sudoku objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('s')
-            ->andWhere('s.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('s.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+    public function save(Sudoku $sudoku) {
+        $sudoku->serializeData();
+        $this->_em->persist($sudoku);
+        $this->_em->flush();
     }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?Sudoku
-    {
-        return $this->createQueryBuilder('s')
-            ->andWhere('s.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
+
+
+
 }

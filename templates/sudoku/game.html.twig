@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Sudoku{% endblock %}
+
+{% block body %}
+
+    <h1 class="flex w-full justify-center mt-12 mb-8 text-5xl text-gray-900 font-bold">SUDOKU</h1>
+    <div class="flex flex-col items-center justify-center w-full">
+        <div class="flex flex-row w-full items-center justify-center">
+            {% for x in [0, 1, 2, 3, 4, 5, 6, 7, 8] %}
+                <div class="flex flex-col items-center justify-center">
+                    {% for y in [0, 1, 2, 3, 4, 5, 6, 7, 8] %}
+
+                        {% set border_top='' %}
+                        {% set border_bottom='' %}
+                        {% set border_right='' %}
+                        {% set border_left='' %}
+
+                        {% if x is divisible by(3) %}
+                            {% set border_left = "border-l-2" %}
+                        {% endif %}
+                        {% if y is divisible by(3) %}
+                            {% set border_top = "border-t-2" %}
+                        {% endif %}
+                        {% if x == 0 %}
+                            {% set border_left = "border-l-4" %}
+                        {% endif %}
+                        {% if y == 0 %}
+                            {% set border_top = "border-t-4" %}
+                        {% endif %}
+                        {% if x == 8 %}
+                            {% set border_right = "border-r-4" %}
+                        {% endif %}
+                        {% if y == 8 %}
+                            {% set border_bottom = "border-b-4" %}
+                        {% endif %}
+
+                        <div class="h-20 w-20 text-2xl font-medium py-auto border border-gray-800 text-center align-middle bg-white hover:bg-blue-200 shadow-md
+                                py-auto {{ border_left }} {{ border_right }} {{ border_bottom }} {{ border_top }}" style="line-height: 5rem">
+
+                        </div>
+
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </div>
+
+    </div>
+
+{% endblock %}

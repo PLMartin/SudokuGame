@@ -104,6 +104,7 @@ class Sudoku
                 throw new \Exception("La difficulté est invalide.");
         }
         $this->difficulty = $difficulty;
+        $this->time = new \DateTime('00:00:00');
 
     }
 
@@ -198,6 +199,12 @@ class Sudoku
             }
         }
         return true;
+
+    }
+
+    public function serializeData()
+    {
+        $this->data = json_encode($this->data);
 
     }
 

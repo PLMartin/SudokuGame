@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Sudoku{% endblock %}
+
+{% block body %}
+
+
+    <div class="flex flex-col items-center justify-center h-screen w-full">
+        <h1 class="flex w-full justify-center mb-8 text-4xl text-gray-900 font-medium">Choisissez une difficulté</h1>
+
+        <div class="flex items-center justify-center">
+        <a class="px-10 py-5 mx-4 border border-2 border-gray-800 rounded-full text-4xl bg-white hover:bg-green-200" href="{{ path('generate', {'difficulty': 1}) }}">Facile</a>
+        <a class="px-10 py-5 mx-4 border border-2 border-gray-800 rounded-full text-4xl bg-white hover:bg-yellow-200" href="{{ path('generate', {'difficulty': 2}) }}">Moyen</a>
+        <a class="px-10 py-5 mx-4 border border-2 border-gray-800 rounded-full text-4xl bg-white hover:bg-red-200" href="{{ path('generate', {'difficulty': 3}) }}">Difficile</a>
+        </div>
+    </div>
+
+{% endblock %}
