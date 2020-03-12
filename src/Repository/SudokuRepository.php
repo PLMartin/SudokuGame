@@ -19,10 +19,28 @@ class SudokuRepository extends ServiceEntityRepository
         parent::__construct($registry, Sudoku::class);
     }
 
-    public function save(Sudoku $sudoku) {
+    public function init(Sudoku $sudoku): void
+    {
+        $this->deleteAll();
+        $this->save($sudoku);
+    }
+
+
+    public function save(Sudoku $sudoku): void
+    {
         $sudoku->serializeData();
         $this->_em->persist($sudoku);
         $this->_em->flush();
+    }
+
+    private function deleteAll(): void
+    {
+        $qb = $this->_em->createQueryBuilder();
+        $query = $qb->delete()
+            ->from(Sudoku::class, 's')
+            ->getQuery();
+
+        $query->execute();
     }
 
 

@@ -17,10 +17,10 @@
                         {% set border_left='' %}
 
                         {% if x is divisible by(3) %}
-                            {% set border_left = "border-l-2" %}
+                            {% set border_left = "border-l-4" %}
                         {% endif %}
                         {% if y is divisible by(3) %}
-                            {% set border_top = "border-t-2" %}
+                            {% set border_top = "border-t-4" %}
                         {% endif %}
                         {% if x == 0 %}
                             {% set border_left = "border-l-4" %}
@@ -35,10 +35,17 @@
                             {% set border_bottom = "border-b-4" %}
                         {% endif %}
 
-                        <div class="h-20 w-20 text-2xl font-medium py-auto border border-gray-800 text-center align-middle bg-white hover:bg-blue-200 shadow-md
+                        {% if sudoku.data[x][y] is not null %}
+                        <div class="h-20 w-20 text-2xl font-medium py-auto border border-gray-800 text-center align-middle bg-white shadow-md
                                 py-auto {{ border_left }} {{ border_right }} {{ border_bottom }} {{ border_top }}" style="line-height: 5rem">
-
+                            {{ sudoku.data[x][y] }}
                         </div>
+
+                        {% else %}
+                            <cell-modal class="h-20 w-20 text-2xl font-medium py-auto border border-gray-800 text-center align-middle bg-white shadow-md
+                                py-auto hover:bg-blue-200 {{ border_left }} {{ border_right }} {{ border_bottom }} {{ border_top }}" :x={{ x }} :y={{ y }} route="{{ path('select_value') }}/"></cell-modal>
+                        {% endif %}
+
 
                     {% endfor %}
                 </div>

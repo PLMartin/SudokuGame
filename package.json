@@ -1,20 +1,42 @@
 {
   "devDependencies": {
-    "@symfony/webpack-encore": "^0.28.3",
-    "autoprefixer": "^9.7.4",
-    "less": "^3.11.1",
-    "less-loader": "^5.0.0",
-    "postcss-import": "^12.0.1",
+    "@fortawesome/fontawesome-free": "^5.12.0",
+    "@symfony/webpack-encore": "^0.27.0",
+    "core-js": "^3.0.0",
     "postcss-loader": "^3.0.0",
-    "tailwindcss": "^1.2.0",
+    "regenerator-runtime": "^0.13.2",
+    "sass": "^1.24.3",
+    "sass-loader": "^8.0.0",
+    "vue": "^2.6.11",
+    "vue-loader": "^15.0.11",
+    "vue-template-compiler": "^2.6.11",
     "webpack-notifier": "^1.6.0"
   },
   "license": "UNLICENSED",
   "private": true,
   "scripts": {
-    "dev-server": "encore dev-server",
-    "dev": "encore dev",
-    "watch": "encore dev --watch",
-    "build": "encore production"
-  }
+    "server": "encore dev-server --port 8081 --host 0.0.0.0 --public http://sport-diary.project:8081 --disable-host-check ",
+    "build": "encore production --progress"
+  },
+  "dependencies": {
+    "@trevoreyre/autocomplete-vue": "^2.0.4",
+    "autoprefixer": "^9.7.3",
+    "axios": "^0.19.2",
+    "chart.js": "^2.9.3",
+    "jquery": "^3.4.1",
+    "lottie-web": "^5.6.4",
+    "moment": "^2.24.0",
+    "node-sass": "^4.13.0",
+    "postcss-import": "^12.0.1",
+    "tailwindcss": "^1.1.4",
+    "vue-carousel": "^0.18.0",
+    "vue-chartjs": "^3.5.0",
+    "vue-select": "^3.4.0",
+    "vuejs-datepicker": "^1.6.2"
+  },
+  "browserslist": [
+    "> 0.5%",
+    "last 2 versions",
+    "IE 11"
+  ]
 }

@@ -20,7 +20,7 @@ class Sudoku
     /**
      * @ORM\Column(type="array")
      */
-    private $data = [];
+    private $data;
 
     /**
      * @ORM\Column(type="integer")
@@ -89,16 +89,16 @@ class Sudoku
 
         switch ($difficulty) {
             case 1:
-                $this->numberOfEmptyCells = 81 - 50;
-                $this->generateGame(50);
-                break;
-            case 2:
                 $this->numberOfEmptyCells = 81 - 40;
                 $this->generateGame(40);
                 break;
-            case 3:
+            case 2:
                 $this->numberOfEmptyCells = 81 - 30;
                 $this->generateGame(30);
+                break;
+            case 3:
+                $this->numberOfEmptyCells = 81 - 20;
+                $this->generateGame(20);
                 break;
             default:
                 throw new \Exception("La difficulté est invalide.");
@@ -111,22 +111,29 @@ class Sudoku
 
     private function generateGame(int $numberOfFilledCells)
     {
-        $table = [];
+        $x = [];
+        $y = [];
+        $values = [];
+
         for ($i = 1; $i < 10; $i++) {
-            array_push($table, $i);
+            array_push($values, $i);
+            array_push($y, $i - 1);
+            array_push($x, $i - 1);
         }
 
-        for ($i = 0; $i < 9; $i++) {
-            shuffle($table);
-            for ($j = 0; $j < 9; $j++) {
-                $this->data[$i][$j] = $table[$j];
-                $numberOfFilledCells -= 1;
-                if ($numberOfFilledCells === 0) {
-                    break;
+        while ($numberOfFilledCells > 0) {
+
+            shuffle($values);
+            shuffle($x);
+            shuffle($y);
+            foreach ($values as $key => $value) {
+                if ($this->verifyCell($x[$key], $y[$key], $value)) {
+                    $this->data[$x[$key]][$y[$key]] = $value;
+                    $numberOfFilledCells -= 1;
+                    if ($numberOfFilledCells <= 0) {
+                        break;
+                    }
                 }
-            }
-            if ($numberOfFilledCells === 0) {
-                break;
             }
         }
     }
@@ -153,7 +160,8 @@ class Sudoku
 
     public function verifyCell(int $x, int $y, int $value): bool
     {
-        return $this->verifyBlock($x, $y, $value) &&
+        return $this->data[$x][$y] === null &&
+            $this->verifyBlock($x, $y, $value) &&
             $this->verifyColumn($x, $y, $value) &&
             $this->verifyLine($x, $y, $value);
     }
@@ -205,8 +213,11 @@ class Sudoku
     public function serializeData()
     {
         $this->data = json_encode($this->data);
-
     }
 
+    public function deserializeData()
+    {
+        $this->data = json_decode($this->data);
+    }
 
 }

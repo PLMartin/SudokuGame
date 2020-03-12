@@ -5,7 +5,6 @@ namespace Tests\Entity;
 
 use App\Entity\Sudoku;
 use PHPUnit\Framework\TestCase;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class SudokuTest extends TestCase
 {
@@ -144,6 +143,8 @@ class SudokuTest extends TestCase
         $sudoku->play(8, 8, 1);
         $this->assertFalse($sudoku->verifyCell(7, 7, 1));
     }
+
+
 
 
 

@@ -1,0 +1,25 @@
+
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<form action="{{ path('enter_value') }}" class="flex flex-col items-center justify-center h-screen w-full">
+
+    <span class="text-2xl font-medium m-4">Saisissez une valeur</span>
+    <input name="value" class="rounded-lg outline-none shadow-inner border border-gray-600 w-12 h-12 text-center">
+    <input name="x" value="{{ x }}" hidden>
+    <input name="y" value="{{ y }}" hidden>
+
+    <button id="enter_value" class="border outline-none m-4 rounded-full px-6 text-xl font-medium border-gray-500 py-3 bg-white hover:bg-blue-200">VALIDER</button>
+</form>
+
+{% endblock %}
+
+
+{% block javascripts %}
+
+    <script>
+
+
+    </script>
+
+{% endblock %}
