@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
+
 /**
  * @ORM\Entity(repositoryClass="App\Repository\SudokuRepository")
  */
@@ -45,12 +46,18 @@ class Sudoku
                 $this->data[$i][$j] = null;
             }
         }
+        $this->difficulty = 0;
+        $this->setTime(new \DateTime('00:00:00'));
+        $this->numberOfEmptyCells = 81;
+
     }
+
 
     public function getId(): ?int
     {
         return $this->id;
     }
+
 
     public function getData(): ?array
     {
@@ -63,15 +70,18 @@ class Sudoku
         return $this->numberOfEmptyCells;
     }
 
+
     public function getDifficulty(): ?string
     {
         return $this->difficulty;
     }
 
+
     public function getTime(): ?\DateTimeInterface
     {
         return $this->time;
     }
+
 
     public function setTime(\DateTimeInterface $time): self
     {
@@ -104,12 +114,10 @@ class Sudoku
                 throw new \Exception("La difficulté est invalide.");
         }
         $this->difficulty = $difficulty;
-        $this->time = new \DateTime('00:00:00');
-
     }
 
 
-    private function generateGame(int $numberOfFilledCells)
+    private function generateGame(int $numberOfFilledCells): void
     {
         $x = [];
         $y = [];
@@ -141,7 +149,6 @@ class Sudoku
 
     public function play(int $x, int $y, int $value): void
     {
-
         if ($value < 1 || $value > 9) {
             throw new \LogicException("La valeur entrée doit etre comprise entre 1 et 9 : ${value}");
         }
@@ -166,7 +173,8 @@ class Sudoku
             $this->verifyLine($x, $y, $value);
     }
 
-    private function verifyBlock(int $x, int $y, int $value)
+
+    private function verifyBlock(int $x, int $y, int $value): bool
     {
         for ($i = intdiv($x, 3) * 3; $i < intdiv($x, 3) * 3 + 3; $i++) {
             for ($j = intdiv($y, 3) * 3; $j < intdiv($y, 3) * 3 + 3; $j++) {
@@ -193,10 +201,10 @@ class Sudoku
             }
         }
         return true;
-
     }
 
-    private function verifyColumn(int $x, int $y, int $value)
+
+    private function verifyColumn(int $x, int $y, int $value): bool
     {
         for ($j = 0; $j < 9; $j++) {
             if ($j === $y) {
@@ -207,15 +215,16 @@ class Sudoku
             }
         }
         return true;
-
     }
 
-    public function serializeData()
+
+    public function serializeData(): void
     {
         $this->data = json_encode($this->data);
     }
 
-    public function deserializeData()
+
+    public function deserializeData(): void
     {
         $this->data = json_decode($this->data);
     }

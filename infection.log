@@ -1,0 +1,1147 @@
+Escaped mutants:
+================
+
+
+1) /home/user/Travail/Tests/SudokuGame/src/Controller/SudokuController.php:49    [M] ArrayItemRemoval
+
+--- Original
++++ New
+@@ @@
+         if ($this->sudoku === null) {
+             return $this->redirect($this->generateUrl('new_game'));
+         }
+-        return $this->render('sudoku/index.html.twig', ['controller_name' => 'SudokuController']);
++        return $this->render('sudoku/index.html.twig', []);
+     }
+     /**
+      * @Route("/play", name="play")
+
+
+2) /home/user/Travail/Tests/SudokuGame/src/Controller/SudokuController.php:61    [M] Throw_
+
+--- Original
++++ New
+@@ @@
+     public function play()
+     {
+         if ($this->sudoku === null || empty($this->sudoku->getData())) {
+-            throw new \LogicException("Impossible de jouer, la grille n'a pas encore été générée.");
++            new \LogicException("Impossible de jouer, la grille n'a pas encore été générée.");
+         }
+         return $this->render('sudoku/game.html.twig', ['controller_name' => 'SudokuController', 'sudoku' => $this->sudoku]);
+     }
+
+
+3) /home/user/Travail/Tests/SudokuGame/src/Controller/SudokuController.php:64    [M] ArrayItemRemoval
+
+--- Original
++++ New
+@@ @@
+         if ($this->sudoku === null || empty($this->sudoku->getData())) {
+             throw new \LogicException("Impossible de jouer, la grille n'a pas encore été générée.");
+         }
+-        return $this->render('sudoku/game.html.twig', ['controller_name' => 'SudokuController', 'sudoku' => $this->sudoku]);
++        return $this->render('sudoku/game.html.twig', ['sudoku' => $this->sudoku]);
+     }
+     /**
+      * @Route("/new-game", name="new_game")
+
+
+4) /home/user/Travail/Tests/SudokuGame/src/Controller/SudokuController.php:75    [M] ArrayItemRemoval
+
+--- Original
++++ New
+@@ @@
+      */
+     public function newGame()
+     {
+-        return $this->render('sudoku/new-game.html.twig', ['controller_name' => 'SudokuController']);
++        return $this->render('sudoku/new-game.html.twig', []);
+     }
+     /**
+      * @Route("/generate", name="generate")
+
+
+5) /home/user/Travail/Tests/SudokuGame/src/Controller/SudokuController.php:94    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+         }
+         $this->sudoku = new Sudoku();
+         $this->sudoku->initializeGame($request->query->get("difficulty"));
+-        $this->sudokuRepository->init($this->sudoku);
++        
+         return $this->redirectToRoute('play');
+     }
+     /**
+
+
+6) /home/user/Travail/Tests/SudokuGame/src/Controller/SudokuController.php:108    [M] LogicalAnd
+
+--- Original
++++ New
+@@ @@
+      */
+     public function selectValue(Request $request)
+     {
+-        if (!($request->query->has('x') && $request->query->has('y'))) {
++        if (!($request->query->has('x') || $request->query->has('y'))) {
+             throw new \Exception("Le paramètre x, y ou value est manquant.");
+         }
+         $view = $this->renderView("sudoku/select-value.html.twig", ['x' => $request->query->get('x'), 'y' => $request->query->get('y')]);
+
+
+7) /home/user/Travail/Tests/SudokuGame/src/Controller/SudokuController.php:129    [M] LogicalAnd
+
+--- Original
++++ New
+@@ @@
+      */
+     public function enterValue(Request $request)
+     {
+-        if (!($request->query->has('x') && $request->query->has('y') && $request->query->has('value'))) {
++        if (!(($request->query->has('x') || $request->query->has('y')) && $request->query->has('value'))) {
+             throw new \Exception("Le paramètre x, y ou value est manquant.");
+         }
+         $x = $request->query->get('x');
+
+
+8) /home/user/Travail/Tests/SudokuGame/src/Controller/SudokuController.php:129    [M] LogicalAnd
+
+--- Original
++++ New
+@@ @@
+      */
+     public function enterValue(Request $request)
+     {
+-        if (!($request->query->has('x') && $request->query->has('y') && $request->query->has('value'))) {
++        if (!($request->query->has('x') && $request->query->has('y') || $request->query->has('value'))) {
+             throw new \Exception("Le paramètre x, y ou value est manquant.");
+         }
+         $x = $request->query->get('x');
+
+
+9) /home/user/Travail/Tests/SudokuGame/src/Controller/SudokuController.php:130    [M] Throw_
+
+--- Original
++++ New
+@@ @@
+     public function enterValue(Request $request)
+     {
+         if (!($request->query->has('x') && $request->query->has('y') && $request->query->has('value'))) {
+-            throw new \Exception("Le paramètre x, y ou value est manquant.");
++            new \Exception("Le paramètre x, y ou value est manquant.");
+         }
+         $x = $request->query->get('x');
+         $y = $request->query->get('y');
+
+
+10) /home/user/Travail/Tests/SudokuGame/src/Controller/SudokuController.php:143    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+         }
+         $canPlay = $this->sudoku->verifyCell($x, $y, $value);
+         if ($canPlay) {
+-            $this->sudoku->play($x, $y, $value);
++            
+             $this->sudokuRepository->save($this->sudoku);
+             return $this->redirectToRoute('valid_entry');
+         }
+
+
+11) /home/user/Travail/Tests/SudokuGame/src/Controller/SudokuController.php:144    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+         $canPlay = $this->sudoku->verifyCell($x, $y, $value);
+         if ($canPlay) {
+             $this->sudoku->play($x, $y, $value);
+-            $this->sudokuRepository->save($this->sudoku);
++            
+             return $this->redirectToRoute('valid_entry');
+         }
+         return $this->redirectToRoute('wrong_entry');
+
+
+12) /home/user/Travail/Tests/SudokuGame/src/Entity/Sudoku.php:43    [M] LessThan
+
+--- Original
++++ New
+@@ @@
+     private $time;
+     public function __construct()
+     {
+-        for ($i = 0; $i < 9; $i++) {
++        for ($i = 0; $i <= 9; $i++) {
+             for ($j = 0; $j < 9; $j++) {
+                 $this->data[$i][$j] = null;
+             }
+
+
+13) /home/user/Travail/Tests/SudokuGame/src/Entity/Sudoku.php:44    [M] LessThan
+
+--- Original
++++ New
+@@ @@
+     public function __construct()
+     {
+         for ($i = 0; $i < 9; $i++) {
+-            for ($j = 0; $j < 9; $j++) {
++            for ($j = 0; $j <= 9; $j++) {
+                 $this->data[$i][$j] = null;
+             }
+         }
+
+
+14) /home/user/Travail/Tests/SudokuGame/src/Entity/Sudoku.php:48    [M] DecrementInteger
+
+--- Original
++++ New
+@@ @@
+                 $this->data[$i][$j] = null;
+             }
+         }
+-        $this->difficulty = 0;
++        $this->difficulty = -1;
+         $this->setTime(new \DateTime('00:00:00'));
+         $this->numberOfEmptyCells = 81;
+     }
+
+
+15) /home/user/Travail/Tests/SudokuGame/src/Entity/Sudoku.php:48    [M] OneZeroInteger
+
+--- Original
++++ New
+@@ @@
+                 $this->data[$i][$j] = null;
+             }
+         }
+-        $this->difficulty = 0;
++        $this->difficulty = 1;
+         $this->setTime(new \DateTime('00:00:00'));
+         $this->numberOfEmptyCells = 81;
+     }
+
+
+16) /home/user/Travail/Tests/SudokuGame/src/Entity/Sudoku.php:50    [M] DecrementInteger
+
+--- Original
++++ New
+@@ @@
+         }
+         $this->difficulty = 0;
+         $this->setTime(new \DateTime('00:00:00'));
+-        $this->numberOfEmptyCells = 81;
++        $this->numberOfEmptyCells = 80;
+     }
+     public function getId() : ?int
+     {
+
+
+17) /home/user/Travail/Tests/SudokuGame/src/Entity/Sudoku.php:50    [M] IncrementInteger
+
+--- Original
++++ New
+@@ @@
+         }
+         $this->difficulty = 0;
+         $this->setTime(new \DateTime('00:00:00'));
+-        $this->numberOfEmptyCells = 81;
++        $this->numberOfEmptyCells = 82;
+     }
+     public function getId() : ?int
+     {
+
+
+18) /home/user/Travail/Tests/SudokuGame/src/Entity/Sudoku.php:80    [M] PublicVisibility
+
+--- Original
++++ New
+@@ @@
+     {
+         return $this->time;
+     }
+-    public function setTime(\DateTimeInterface $time) : self
++    protected function setTime(\DateTimeInterface $time) : self
+     {
+         $this->time = $time;
+         return $this;
+
+
+19) /home/user/Travail/Tests/SudokuGame/src/Entity/Sudoku.php:121    [M] IncrementInteger
+
+--- Original
++++ New
+@@ @@
+         $x = [];
+         $y = [];
+         $values = [];
+-        for ($i = 1; $i < 10; $i++) {
++        for ($i = 2; $i < 10; $i++) {
+             array_push($values, $i);
+             array_push($y, $i - 1);
+             array_push($x, $i - 1);
+
+
+20) /home/user/Travail/Tests/SudokuGame/src/Entity/Sudoku.php:129    [M] FunctionCallRemoval
+
+--- Original
++++ New
+@@ @@
+             array_push($x, $i - 1);
+         }
+         while ($numberOfFilledCells > 0) {
+-            shuffle($values);
++            
+             shuffle($x);
+             shuffle($y);
+             foreach ($values as $key => $value) {
+
+
+21) /home/user/Travail/Tests/SudokuGame/src/Entity/Sudoku.php:130    [M] FunctionCallRemoval
+
+--- Original
++++ New
+@@ @@
+         }
+         while ($numberOfFilledCells > 0) {
+             shuffle($values);
+-            shuffle($x);
++            
+             shuffle($y);
+             foreach ($values as $key => $value) {
+                 if ($this->verifyCell($x[$key], $y[$key], $value)) {
+
+
+22) /home/user/Travail/Tests/SudokuGame/src/Entity/Sudoku.php:131    [M] FunctionCallRemoval
+
+--- Original
++++ New
+@@ @@
+         while ($numberOfFilledCells > 0) {
+             shuffle($values);
+             shuffle($x);
+-            shuffle($y);
++            
+             foreach ($values as $key => $value) {
+                 if ($this->verifyCell($x[$key], $y[$key], $value)) {
+                     $this->data[$x[$key]][$y[$key]] = $value;
+
+
+23) /home/user/Travail/Tests/SudokuGame/src/Entity/Sudoku.php:148    [M] GreaterThan
+
+--- Original
++++ New
+@@ @@
+     }
+     public function play(int $x, int $y, int $value) : void
+     {
+-        if ($value < 1 || $value > 9) {
++        if ($value < 1 || $value >= 9) {
+             throw new \LogicException("La valeur entrée doit etre comprise entre 1 et 9 : {$value}");
+         }
+         if ($x > 8 || $x < 0 || $y > 8 || $y < 0) {
+
+
+24) /home/user/Travail/Tests/SudokuGame/src/Entity/Sudoku.php:174    [M] IncrementInteger
+
+--- Original
++++ New
+@@ @@
+     }
+     private function verifyBlock(int $x, int $y, int $value)
+     {
+-        for ($i = intdiv($x, 3) * 3; $i < intdiv($x, 3) * 3 + 3; $i++) {
++        for ($i = intdiv($x, 4) * 3; $i < intdiv($x, 3) * 3 + 3; $i++) {
+             for ($j = intdiv($y, 3) * 3; $j < intdiv($y, 3) * 3 + 3; $j++) {
+                 if ($i === $x && $j === $y) {
+                     continue;
+
+
+25) /home/user/Travail/Tests/SudokuGame/src/Entity/Sudoku.php:174    [M] DecrementInteger
+
+--- Original
++++ New
+@@ @@
+     }
+     private function verifyBlock(int $x, int $y, int $value)
+     {
+-        for ($i = intdiv($x, 3) * 3; $i < intdiv($x, 3) * 3 + 3; $i++) {
++        for ($i = intdiv($x, 3) * 2; $i < intdiv($x, 3) * 3 + 3; $i++) {
+             for ($j = intdiv($y, 3) * 3; $j < intdiv($y, 3) * 3 + 3; $j++) {
+                 if ($i === $x && $j === $y) {
+                     continue;
+
+
+26) /home/user/Travail/Tests/SudokuGame/src/Entity/Sudoku.php:174    [M] IncrementInteger
+
+--- Original
++++ New
+@@ @@
+     }
+     private function verifyBlock(int $x, int $y, int $value)
+     {
+-        for ($i = intdiv($x, 3) * 3; $i < intdiv($x, 3) * 3 + 3; $i++) {
++        for ($i = intdiv($x, 3) * 4; $i < intdiv($x, 3) * 3 + 3; $i++) {
+             for ($j = intdiv($y, 3) * 3; $j < intdiv($y, 3) * 3 + 3; $j++) {
+                 if ($i === $x && $j === $y) {
+                     continue;
+
+
+27) /home/user/Travail/Tests/SudokuGame/src/Entity/Sudoku.php:174    [M] Multiplication
+
+--- Original
++++ New
+@@ @@
+     }
+     private function verifyBlock(int $x, int $y, int $value)
+     {
+-        for ($i = intdiv($x, 3) * 3; $i < intdiv($x, 3) * 3 + 3; $i++) {
++        for ($i = intdiv($x, 3) / 3; $i < intdiv($x, 3) * 3 + 3; $i++) {
+             for ($j = intdiv($y, 3) * 3; $j < intdiv($y, 3) * 3 + 3; $j++) {
+                 if ($i === $x && $j === $y) {
+                     continue;
+
+
+28) /home/user/Travail/Tests/SudokuGame/src/Entity/Sudoku.php:175    [M] Multiplication
+
+--- Original
++++ New
+@@ @@
+     private function verifyBlock(int $x, int $y, int $value)
+     {
+         for ($i = intdiv($x, 3) * 3; $i < intdiv($x, 3) * 3 + 3; $i++) {
+-            for ($j = intdiv($y, 3) * 3; $j < intdiv($y, 3) * 3 + 3; $j++) {
++            for ($j = intdiv($y, 3) / 3; $j < intdiv($y, 3) * 3 + 3; $j++) {
+                 if ($i === $x && $j === $y) {
+                     continue;
+                 }
+
+
+29) /home/user/Travail/Tests/SudokuGame/src/Entity/Sudoku.php:175    [M] IncrementInteger
+
+--- Original
++++ New
+@@ @@
+     private function verifyBlock(int $x, int $y, int $value)
+     {
+         for ($i = intdiv($x, 3) * 3; $i < intdiv($x, 3) * 3 + 3; $i++) {
+-            for ($j = intdiv($y, 3) * 3; $j < intdiv($y, 3) * 3 + 3; $j++) {
++            for ($j = intdiv($y, 3) * 4; $j < intdiv($y, 3) * 3 + 3; $j++) {
+                 if ($i === $x && $j === $y) {
+                     continue;
+                 }
+
+
+30) /home/user/Travail/Tests/SudokuGame/src/Entity/Sudoku.php:175    [M] DecrementInteger
+
+--- Original
++++ New
+@@ @@
+     private function verifyBlock(int $x, int $y, int $value)
+     {
+         for ($i = intdiv($x, 3) * 3; $i < intdiv($x, 3) * 3 + 3; $i++) {
+-            for ($j = intdiv($y, 3) * 3; $j < intdiv($y, 3) * 3 + 3; $j++) {
++            for ($j = intdiv($y, 3) * 2; $j < intdiv($y, 3) * 3 + 3; $j++) {
+                 if ($i === $x && $j === $y) {
+                     continue;
+                 }
+
+
+31) /home/user/Travail/Tests/SudokuGame/src/Entity/Sudoku.php:175    [M] IncrementInteger
+
+--- Original
++++ New
+@@ @@
+     private function verifyBlock(int $x, int $y, int $value)
+     {
+         for ($i = intdiv($x, 3) * 3; $i < intdiv($x, 3) * 3 + 3; $i++) {
+-            for ($j = intdiv($y, 3) * 3; $j < intdiv($y, 3) * 3 + 3; $j++) {
++            for ($j = intdiv($y, 4) * 3; $j < intdiv($y, 3) * 3 + 3; $j++) {
+                 if ($i === $x && $j === $y) {
+                     continue;
+                 }
+
+
+32) /home/user/Travail/Tests/SudokuGame/src/Entity/Sudoku.php:176    [M] Identical
+
+--- Original
++++ New
+@@ @@
+     {
+         for ($i = intdiv($x, 3) * 3; $i < intdiv($x, 3) * 3 + 3; $i++) {
+             for ($j = intdiv($y, 3) * 3; $j < intdiv($y, 3) * 3 + 3; $j++) {
+-                if ($i === $x && $j === $y) {
++                if ($i !== $x && $j === $y) {
+                     continue;
+                 }
+                 if ($this->data[$i][$j] === $value) {
+
+
+33) /home/user/Travail/Tests/SudokuGame/src/Entity/Sudoku.php:176    [M] Identical
+
+--- Original
++++ New
+@@ @@
+     {
+         for ($i = intdiv($x, 3) * 3; $i < intdiv($x, 3) * 3 + 3; $i++) {
+             for ($j = intdiv($y, 3) * 3; $j < intdiv($y, 3) * 3 + 3; $j++) {
+-                if ($i === $x && $j === $y) {
++                if ($i === $x && $j !== $y) {
+                     continue;
+                 }
+                 if ($this->data[$i][$j] === $value) {
+
+
+34) /home/user/Travail/Tests/SudokuGame/src/Entity/Sudoku.php:176    [M] LogicalAnd
+
+--- Original
++++ New
+@@ @@
+     {
+         for ($i = intdiv($x, 3) * 3; $i < intdiv($x, 3) * 3 + 3; $i++) {
+             for ($j = intdiv($y, 3) * 3; $j < intdiv($y, 3) * 3 + 3; $j++) {
+-                if ($i === $x && $j === $y) {
++                if ($i === $x || $j === $y) {
+                     continue;
+                 }
+                 if ($this->data[$i][$j] === $value) {
+
+
+35) /home/user/Travail/Tests/SudokuGame/src/Entity/Sudoku.php:177    [M] Continue_
+
+--- Original
++++ New
+@@ @@
+         for ($i = intdiv($x, 3) * 3; $i < intdiv($x, 3) * 3 + 3; $i++) {
+             for ($j = intdiv($y, 3) * 3; $j < intdiv($y, 3) * 3 + 3; $j++) {
+                 if ($i === $x && $j === $y) {
+-                    continue;
++                    break;
+                 }
+                 if ($this->data[$i][$j] === $value) {
+                     return false;
+
+
+36) /home/user/Travail/Tests/SudokuGame/src/Entity/Sudoku.php:190    [M] OneZeroInteger
+
+--- Original
++++ New
+@@ @@
+     }
+     private function verifyLine(int $x, int $y, int $value) : bool
+     {
+-        for ($i = 0; $i < 9; $i++) {
++        for ($i = 1; $i < 9; $i++) {
+             if ($i === $x) {
+                 continue;
+             }
+
+
+37) /home/user/Travail/Tests/SudokuGame/src/Entity/Sudoku.php:192    [M] Continue_
+
+--- Original
++++ New
+@@ @@
+     {
+         for ($i = 0; $i < 9; $i++) {
+             if ($i === $x) {
+-                continue;
++                break;
+             }
+             if ($this->data[$i][$y] === $value) {
+                 return false;
+
+
+38) /home/user/Travail/Tests/SudokuGame/src/Entity/Sudoku.php:204    [M] OneZeroInteger
+
+--- Original
++++ New
+@@ @@
+     }
+     private function verifyColumn(int $x, int $y, int $value)
+     {
+-        for ($j = 0; $j < 9; $j++) {
++        for ($j = 1; $j < 9; $j++) {
+             if ($j === $y) {
+                 continue;
+             }
+
+
+39) /home/user/Travail/Tests/SudokuGame/src/Entity/Sudoku.php:206    [M] Continue_
+
+--- Original
++++ New
+@@ @@
+     {
+         for ($j = 0; $j < 9; $j++) {
+             if ($j === $y) {
+-                continue;
++                break;
+             }
+             if ($this->data[$x][$j] === $value) {
+                 return false;
+
+Timed Out mutants:
+==================
+
+
+1) /home/user/Travail/Tests/SudokuGame/src/Entity/Sudoku.php:121    [M] LessThanNegotiation
+
+--- Original
++++ New
+@@ @@
+         $x = [];
+         $y = [];
+         $values = [];
+-        for ($i = 1; $i < 10; $i++) {
++        for ($i = 1; $i >= 10; $i++) {
+             array_push($values, $i);
+             array_push($y, $i - 1);
+             array_push($x, $i - 1);
+
+
+2) /home/user/Travail/Tests/SudokuGame/src/Entity/Sudoku.php:121    [M] For_
+
+--- Original
++++ New
+@@ @@
+         $x = [];
+         $y = [];
+         $values = [];
+-        for ($i = 1; $i < 10; $i++) {
++        for ($i = 1; false; $i++) {
+             array_push($values, $i);
+             array_push($y, $i - 1);
+             array_push($x, $i - 1);
+
+
+3) /home/user/Travail/Tests/SudokuGame/src/Entity/Sudoku.php:122    [M] FunctionCallRemoval
+
+--- Original
++++ New
+@@ @@
+         $y = [];
+         $values = [];
+         for ($i = 1; $i < 10; $i++) {
+-            array_push($values, $i);
++            
+             array_push($y, $i - 1);
+             array_push($x, $i - 1);
+         }
+
+
+4) /home/user/Travail/Tests/SudokuGame/src/Entity/Sudoku.php:132    [M] Foreach_
+
+--- Original
++++ New
+@@ @@
+             shuffle($values);
+             shuffle($x);
+             shuffle($y);
+-            foreach ($values as $key => $value) {
++            foreach (array() as $key => $value) {
+                 if ($this->verifyCell($x[$key], $y[$key], $value)) {
+                     $this->data[$x[$key]][$y[$key]] = $value;
+                     $numberOfFilledCells -= 1;
+
+
+5) /home/user/Travail/Tests/SudokuGame/src/Entity/Sudoku.php:135    [M] OneZeroInteger
+
+--- Original
++++ New
+@@ @@
+             foreach ($values as $key => $value) {
+                 if ($this->verifyCell($x[$key], $y[$key], $value)) {
+                     $this->data[$x[$key]][$y[$key]] = $value;
+-                    $numberOfFilledCells -= 1;
++                    $numberOfFilledCells -= 0;
+                     if ($numberOfFilledCells <= 0) {
+                         break;
+                     }
+
+
+6) /home/user/Travail/Tests/SudokuGame/src/Entity/Sudoku.php:135    [M] Assignment
+
+--- Original
++++ New
+@@ @@
+             foreach ($values as $key => $value) {
+                 if ($this->verifyCell($x[$key], $y[$key], $value)) {
+                     $this->data[$x[$key]][$y[$key]] = $value;
+-                    $numberOfFilledCells -= 1;
++                    $numberOfFilledCells = 1;
+                     if ($numberOfFilledCells <= 0) {
+                         break;
+                     }
+
+
+7) /home/user/Travail/Tests/SudokuGame/src/Entity/Sudoku.php:135    [M] MinusEqual
+
+--- Original
++++ New
+@@ @@
+             foreach ($values as $key => $value) {
+                 if ($this->verifyCell($x[$key], $y[$key], $value)) {
+                     $this->data[$x[$key]][$y[$key]] = $value;
+-                    $numberOfFilledCells -= 1;
++                    $numberOfFilledCells += 1;
+                     if ($numberOfFilledCells <= 0) {
+                         break;
+                     }
+
+
+8) /home/user/Travail/Tests/SudokuGame/src/Entity/Sudoku.php:166    [M] Identical
+
+--- Original
++++ New
+@@ @@
+     }
+     public function verifyCell(int $x, int $y, int $value) : bool
+     {
+-        return $this->data[$x][$y] === null && $this->verifyBlock($x, $y, $value) && $this->verifyColumn($x, $y, $value) && $this->verifyLine($x, $y, $value);
++        return $this->data[$x][$y] !== null && $this->verifyBlock($x, $y, $value) && $this->verifyColumn($x, $y, $value) && $this->verifyLine($x, $y, $value);
+     }
+     private function verifyBlock(int $x, int $y, int $value)
+     {
+
+
+9) /home/user/Travail/Tests/SudokuGame/src/Entity/Sudoku.php:179    [M] Identical
+
+--- Original
++++ New
+@@ @@
+                 if ($i === $x && $j === $y) {
+                     continue;
+                 }
+-                if ($this->data[$i][$j] === $value) {
++                if ($this->data[$i][$j] !== $value) {
+                     return false;
+                 }
+             }
+
+
+10) /home/user/Travail/Tests/SudokuGame/src/Entity/Sudoku.php:184    [M] TrueValue
+
+--- Original
++++ New
+@@ @@
+                 }
+             }
+         }
+-        return true;
++        return false;
+     }
+     private function verifyLine(int $x, int $y, int $value) : bool
+     {
+
+
+11) /home/user/Travail/Tests/SudokuGame/src/Entity/Sudoku.php:194    [M] Identical
+
+--- Original
++++ New
+@@ @@
+             if ($i === $x) {
+                 continue;
+             }
+-            if ($this->data[$i][$y] === $value) {
++            if ($this->data[$i][$y] !== $value) {
+                 return false;
+             }
+         }
+
+
+12) /home/user/Travail/Tests/SudokuGame/src/Entity/Sudoku.php:198    [M] TrueValue
+
+--- Original
++++ New
+@@ @@
+                 return false;
+             }
+         }
+-        return true;
++        return false;
+     }
+     private function verifyColumn(int $x, int $y, int $value)
+     {
+
+
+13) /home/user/Travail/Tests/SudokuGame/src/Entity/Sudoku.php:208    [M] Identical
+
+--- Original
++++ New
+@@ @@
+             if ($j === $y) {
+                 continue;
+             }
+-            if ($this->data[$x][$j] === $value) {
++            if ($this->data[$x][$j] !== $value) {
+                 return false;
+             }
+         }
+
+
+14) /home/user/Travail/Tests/SudokuGame/src/Entity/Sudoku.php:212    [M] TrueValue
+
+--- Original
++++ New
+@@ @@
+                 return false;
+             }
+         }
+-        return true;
++        return false;
+     }
+     public function serializeData()
+     {
+
+Not Covered mutants:
+====================
+
+
+1) /home/user/Travail/Tests/SudokuGame/src/Controller/SudokuController.php:138    [M] Throw_
+
+--- Original
++++ New
+@@ @@
+         $y = $request->query->get('y');
+         $value = $request->query->get('value');
+         if ($this->sudoku === null) {
+-            throw new \Exception("Vous ne pouvez jouez alors que la grille n'a pas encore été générée.");
++            new \Exception("Vous ne pouvez jouez alors que la grille n'a pas encore été générée.");
+         }
+         $canPlay = $this->sudoku->verifyCell($x, $y, $value);
+         if ($canPlay) {
+
+
+2) /home/user/Travail/Tests/SudokuGame/src/Entity/Sudoku.php:54    [M] PublicVisibility
+
+--- Original
++++ New
+@@ @@
+         $this->setTime(new \DateTime('00:00:00'));
+         $this->numberOfEmptyCells = 81;
+     }
+-    public function getId() : ?int
++    protected function getId() : ?int
+     {
+         return $this->id;
+     }
+
+
+3) /home/user/Travail/Tests/SudokuGame/src/Entity/Sudoku.php:75    [M] PublicVisibility
+
+--- Original
++++ New
+@@ @@
+     {
+         return $this->difficulty;
+     }
+-    public function getTime() : ?\DateTimeInterface
++    protected function getTime() : ?\DateTimeInterface
+     {
+         return $this->time;
+     }
+
+
+4) /home/user/Travail/Tests/SudokuGame/src/Kernel.php:21    [M] Foreach_
+
+--- Original
++++ New
+@@ @@
+     public function registerBundles() : iterable
+     {
+         $contents = (require $this->getProjectDir() . '/config/bundles.php');
+-        foreach ($contents as $class => $envs) {
++        foreach (array() as $class => $envs) {
+             if ($envs[$this->environment] ?? $envs['all'] ?? false) {
+                 (yield new $class());
+             }
+
+
+5) /home/user/Travail/Tests/SudokuGame/src/Kernel.php:22    [M] Coalesce
+
+--- Original
++++ New
+@@ @@
+     {
+         $contents = (require $this->getProjectDir() . '/config/bundles.php');
+         foreach ($contents as $class => $envs) {
+-            if ($envs[$this->environment] ?? $envs['all'] ?? false) {
++            if ($envs['all'] ?? false) {
+                 (yield new $class());
+             }
+         }
+
+
+6) /home/user/Travail/Tests/SudokuGame/src/Kernel.php:22    [M] Coalesce
+
+--- Original
++++ New
+@@ @@
+     {
+         $contents = (require $this->getProjectDir() . '/config/bundles.php');
+         foreach ($contents as $class => $envs) {
+-            if ($envs[$this->environment] ?? $envs['all'] ?? false) {
++            if ($envs[$this->environment] ?? false) {
+                 (yield new $class());
+             }
+         }
+
+
+7) /home/user/Travail/Tests/SudokuGame/src/Kernel.php:22    [M] FalseValue
+
+--- Original
++++ New
+@@ @@
+     {
+         $contents = (require $this->getProjectDir() . '/config/bundles.php');
+         foreach ($contents as $class => $envs) {
+-            if ($envs[$this->environment] ?? $envs['all'] ?? false) {
++            if ($envs[$this->environment] ?? $envs['all'] ?? true) {
+                 (yield new $class());
+             }
+         }
+
+
+8) /home/user/Travail/Tests/SudokuGame/src/Kernel.php:33    [M] ProtectedVisibility
+
+--- Original
++++ New
+@@ @@
+     {
+         return \dirname(__DIR__);
+     }
+-    protected function configureContainer(ContainerBuilder $container, LoaderInterface $loader) : void
++    private function configureContainer(ContainerBuilder $container, LoaderInterface $loader) : void
+     {
+         $container->addResource(new FileResource($this->getProjectDir() . '/config/bundles.php'));
+         $container->setParameter('container.dumper.inline_class_loader', \PHP_VERSION_ID < 70400 || $this->debug);
+
+
+9) /home/user/Travail/Tests/SudokuGame/src/Kernel.php:35    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+     }
+     protected function configureContainer(ContainerBuilder $container, LoaderInterface $loader) : void
+     {
+-        $container->addResource(new FileResource($this->getProjectDir() . '/config/bundles.php'));
++        
+         $container->setParameter('container.dumper.inline_class_loader', \PHP_VERSION_ID < 70400 || $this->debug);
+         $container->setParameter('container.dumper.inline_factories', true);
+         $confDir = $this->getProjectDir() . '/config';
+
+
+10) /home/user/Travail/Tests/SudokuGame/src/Kernel.php:36    [M] LessThan
+
+--- Original
++++ New
+@@ @@
+     protected function configureContainer(ContainerBuilder $container, LoaderInterface $loader) : void
+     {
+         $container->addResource(new FileResource($this->getProjectDir() . '/config/bundles.php'));
+-        $container->setParameter('container.dumper.inline_class_loader', \PHP_VERSION_ID < 70400 || $this->debug);
++        $container->setParameter('container.dumper.inline_class_loader', \PHP_VERSION_ID <= 70400 || $this->debug);
+         $container->setParameter('container.dumper.inline_factories', true);
+         $confDir = $this->getProjectDir() . '/config';
+         $loader->load($confDir . '/{packages}/*' . self::CONFIG_EXTS, 'glob');
+
+
+11) /home/user/Travail/Tests/SudokuGame/src/Kernel.php:36    [M] LessThanNegotiation
+
+--- Original
++++ New
+@@ @@
+     protected function configureContainer(ContainerBuilder $container, LoaderInterface $loader) : void
+     {
+         $container->addResource(new FileResource($this->getProjectDir() . '/config/bundles.php'));
+-        $container->setParameter('container.dumper.inline_class_loader', \PHP_VERSION_ID < 70400 || $this->debug);
++        $container->setParameter('container.dumper.inline_class_loader', \PHP_VERSION_ID >= 70400 || $this->debug);
+         $container->setParameter('container.dumper.inline_factories', true);
+         $confDir = $this->getProjectDir() . '/config';
+         $loader->load($confDir . '/{packages}/*' . self::CONFIG_EXTS, 'glob');
+
+
+12) /home/user/Travail/Tests/SudokuGame/src/Kernel.php:36    [M] LogicalOr
+
+--- Original
++++ New
+@@ @@
+     protected function configureContainer(ContainerBuilder $container, LoaderInterface $loader) : void
+     {
+         $container->addResource(new FileResource($this->getProjectDir() . '/config/bundles.php'));
+-        $container->setParameter('container.dumper.inline_class_loader', \PHP_VERSION_ID < 70400 || $this->debug);
++        $container->setParameter('container.dumper.inline_class_loader', \PHP_VERSION_ID < 70400 && $this->debug);
+         $container->setParameter('container.dumper.inline_factories', true);
+         $confDir = $this->getProjectDir() . '/config';
+         $loader->load($confDir . '/{packages}/*' . self::CONFIG_EXTS, 'glob');
+
+
+13) /home/user/Travail/Tests/SudokuGame/src/Kernel.php:36    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+     protected function configureContainer(ContainerBuilder $container, LoaderInterface $loader) : void
+     {
+         $container->addResource(new FileResource($this->getProjectDir() . '/config/bundles.php'));
+-        $container->setParameter('container.dumper.inline_class_loader', \PHP_VERSION_ID < 70400 || $this->debug);
++        
+         $container->setParameter('container.dumper.inline_factories', true);
+         $confDir = $this->getProjectDir() . '/config';
+         $loader->load($confDir . '/{packages}/*' . self::CONFIG_EXTS, 'glob');
+
+
+14) /home/user/Travail/Tests/SudokuGame/src/Kernel.php:37    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+     {
+         $container->addResource(new FileResource($this->getProjectDir() . '/config/bundles.php'));
+         $container->setParameter('container.dumper.inline_class_loader', \PHP_VERSION_ID < 70400 || $this->debug);
+-        $container->setParameter('container.dumper.inline_factories', true);
++        
+         $confDir = $this->getProjectDir() . '/config';
+         $loader->load($confDir . '/{packages}/*' . self::CONFIG_EXTS, 'glob');
+         $loader->load($confDir . '/{packages}/' . $this->environment . '/*' . self::CONFIG_EXTS, 'glob');
+
+
+15) /home/user/Travail/Tests/SudokuGame/src/Kernel.php:37    [M] TrueValue
+
+--- Original
++++ New
+@@ @@
+     {
+         $container->addResource(new FileResource($this->getProjectDir() . '/config/bundles.php'));
+         $container->setParameter('container.dumper.inline_class_loader', \PHP_VERSION_ID < 70400 || $this->debug);
+-        $container->setParameter('container.dumper.inline_factories', true);
++        $container->setParameter('container.dumper.inline_factories', false);
+         $confDir = $this->getProjectDir() . '/config';
+         $loader->load($confDir . '/{packages}/*' . self::CONFIG_EXTS, 'glob');
+         $loader->load($confDir . '/{packages}/' . $this->environment . '/*' . self::CONFIG_EXTS, 'glob');
+
+
+16) /home/user/Travail/Tests/SudokuGame/src/Kernel.php:40    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+         $container->setParameter('container.dumper.inline_class_loader', \PHP_VERSION_ID < 70400 || $this->debug);
+         $container->setParameter('container.dumper.inline_factories', true);
+         $confDir = $this->getProjectDir() . '/config';
+-        $loader->load($confDir . '/{packages}/*' . self::CONFIG_EXTS, 'glob');
++        
+         $loader->load($confDir . '/{packages}/' . $this->environment . '/*' . self::CONFIG_EXTS, 'glob');
+         $loader->load($confDir . '/{services}' . self::CONFIG_EXTS, 'glob');
+         $loader->load($confDir . '/{services}_' . $this->environment . self::CONFIG_EXTS, 'glob');
+
+
+17) /home/user/Travail/Tests/SudokuGame/src/Kernel.php:41    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+         $container->setParameter('container.dumper.inline_factories', true);
+         $confDir = $this->getProjectDir() . '/config';
+         $loader->load($confDir . '/{packages}/*' . self::CONFIG_EXTS, 'glob');
+-        $loader->load($confDir . '/{packages}/' . $this->environment . '/*' . self::CONFIG_EXTS, 'glob');
++        
+         $loader->load($confDir . '/{services}' . self::CONFIG_EXTS, 'glob');
+         $loader->load($confDir . '/{services}_' . $this->environment . self::CONFIG_EXTS, 'glob');
+     }
+
+
+18) /home/user/Travail/Tests/SudokuGame/src/Kernel.php:42    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+         $confDir = $this->getProjectDir() . '/config';
+         $loader->load($confDir . '/{packages}/*' . self::CONFIG_EXTS, 'glob');
+         $loader->load($confDir . '/{packages}/' . $this->environment . '/*' . self::CONFIG_EXTS, 'glob');
+-        $loader->load($confDir . '/{services}' . self::CONFIG_EXTS, 'glob');
++        
+         $loader->load($confDir . '/{services}_' . $this->environment . self::CONFIG_EXTS, 'glob');
+     }
+     protected function configureRoutes(RouteCollectionBuilder $routes) : void
+
+
+19) /home/user/Travail/Tests/SudokuGame/src/Kernel.php:43    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+         $loader->load($confDir . '/{packages}/*' . self::CONFIG_EXTS, 'glob');
+         $loader->load($confDir . '/{packages}/' . $this->environment . '/*' . self::CONFIG_EXTS, 'glob');
+         $loader->load($confDir . '/{services}' . self::CONFIG_EXTS, 'glob');
+-        $loader->load($confDir . '/{services}_' . $this->environment . self::CONFIG_EXTS, 'glob');
++        
+     }
+     protected function configureRoutes(RouteCollectionBuilder $routes) : void
+     {
+
+
+20) /home/user/Travail/Tests/SudokuGame/src/Kernel.php:46    [M] ProtectedVisibility
+
+--- Original
++++ New
+@@ @@
+         $loader->load($confDir . '/{services}' . self::CONFIG_EXTS, 'glob');
+         $loader->load($confDir . '/{services}_' . $this->environment . self::CONFIG_EXTS, 'glob');
+     }
+-    protected function configureRoutes(RouteCollectionBuilder $routes) : void
++    private function configureRoutes(RouteCollectionBuilder $routes) : void
+     {
+         $confDir = $this->getProjectDir() . '/config';
+         $routes->import($confDir . '/{routes}/' . $this->environment . '/*' . self::CONFIG_EXTS, '/', 'glob');
+
+
+21) /home/user/Travail/Tests/SudokuGame/src/Kernel.php:50    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+     protected function configureRoutes(RouteCollectionBuilder $routes) : void
+     {
+         $confDir = $this->getProjectDir() . '/config';
+-        $routes->import($confDir . '/{routes}/' . $this->environment . '/*' . self::CONFIG_EXTS, '/', 'glob');
++        
+         $routes->import($confDir . '/{routes}/*' . self::CONFIG_EXTS, '/', 'glob');
+         $routes->import($confDir . '/{routes}' . self::CONFIG_EXTS, '/', 'glob');
+     }
+ }
+
+22) /home/user/Travail/Tests/SudokuGame/src/Kernel.php:51    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+     {
+         $confDir = $this->getProjectDir() . '/config';
+         $routes->import($confDir . '/{routes}/' . $this->environment . '/*' . self::CONFIG_EXTS, '/', 'glob');
+-        $routes->import($confDir . '/{routes}/*' . self::CONFIG_EXTS, '/', 'glob');
++        
+         $routes->import($confDir . '/{routes}' . self::CONFIG_EXTS, '/', 'glob');
+     }
+ }
+
+
+23) /home/user/Travail/Tests/SudokuGame/src/Kernel.php:52    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+         $confDir = $this->getProjectDir() . '/config';
+         $routes->import($confDir . '/{routes}/' . $this->environment . '/*' . self::CONFIG_EXTS, '/', 'glob');
+         $routes->import($confDir . '/{routes}/*' . self::CONFIG_EXTS, '/', 'glob');
+-        $routes->import($confDir . '/{routes}' . self::CONFIG_EXTS, '/', 'glob');
++        
+     }
+ }

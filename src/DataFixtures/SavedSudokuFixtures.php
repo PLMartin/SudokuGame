@@ -11,7 +11,7 @@ class SavedSudokuFixtures extends Fixture
     public function load(ObjectManager $manager)
     {
         $sudoku = new Sudoku();
-        $sudoku->initializeGame(3);
+        $sudoku->serializeData();
         $manager->persist($sudoku);
         $manager->flush();
     }

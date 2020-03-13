@@ -1,10 +1,10 @@
 <?php
 
-
 namespace Tests\Entity;
 
 use App\Entity\Sudoku;
 use PHPUnit\Framework\TestCase;
+
 
 class SudokuTest extends TestCase
 {
@@ -15,6 +15,7 @@ class SudokuTest extends TestCase
         yield [2, 30];
         yield [3, 20];
     }
+
 
     /**
      * @param $difficulty
@@ -45,7 +46,6 @@ class SudokuTest extends TestCase
     }
 
 
-
     public function wrongDifficultyProvider()
     {
         yield [0];
@@ -66,7 +66,6 @@ class SudokuTest extends TestCase
     }
 
 
-
     public function wrongPositionProvider()
     {
         yield [-1, 0];
@@ -74,6 +73,7 @@ class SudokuTest extends TestCase
         yield [9, 0];
         yield [0, 9];
     }
+
 
     /**
      * @param $x
@@ -119,7 +119,6 @@ class SudokuTest extends TestCase
     }
 
 
-
     public function testVerifyCellAlreadyInLine()
     {
         $sudoku = new Sudoku();
@@ -127,12 +126,14 @@ class SudokuTest extends TestCase
         $this->assertFalse($sudoku->verifyCell(8, 1, 1));
     }
 
+
     public function testVerifyCellAlreadyInColumn()
     {
         $sudoku = new Sudoku();
         $sudoku->play(1, 1, 1);
         $this->assertFalse($sudoku->verifyCell(1, 8, 1));
     }
+
 
     public function testVerifyCellAlreadyInBlock()
     {
@@ -143,15 +144,4 @@ class SudokuTest extends TestCase
         $sudoku->play(8, 8, 1);
         $this->assertFalse($sudoku->verifyCell(7, 7, 1));
     }
-
-
-
-
-
-
-
-
-
-
-
 }

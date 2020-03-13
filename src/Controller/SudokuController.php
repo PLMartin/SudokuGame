@@ -43,6 +43,9 @@ class SudokuController extends AbstractController
      */
     public function home()
     {
+        if ($this->sudoku === null) {
+            return $this->redirect($this->generateUrl('new_game'));
+        }
         return $this->render('sudoku/index.html.twig', [
             'controller_name' => 'SudokuController',
         ]);
@@ -57,7 +60,6 @@ class SudokuController extends AbstractController
         if ($this->sudoku === null || empty($this->sudoku->getData())) {
             throw new \LogicException("Impossible de jouer, la grille n'a pas encore été générée.");
         }
-
 
         return $this->render('sudoku/game.html.twig', [
             'controller_name' => 'SudokuController',
@@ -99,9 +101,14 @@ class SudokuController extends AbstractController
      * @Route("/select-value", name="select_value")
      * @param Request $request
      * @return Response
+     * @throws \Exception
      */
     public function selectValue(Request $request)
     {
+        if (!($request->query->has('x') && $request->query->has('y'))) {
+            throw new \Exception("Le paramètre x, y ou value est manquant.");
+        }
+
         $view = $this->renderView("sudoku/select-value.html.twig", [
             'x' => $request->query->get('x'),
             'y' => $request->query->get('y')
@@ -109,6 +116,7 @@ class SudokuController extends AbstractController
 
         return new Response($view, 200);
     }
+
 
     /**
      * @Route("/enter-value", name="enter_value")
