@@ -4,7 +4,9 @@
 namespace Tests\Controller;
 
 use App\Controller\SudokuController;
+use App\DataFixtures\SavedSudokuFixtures;
 use App\Repository\SudokuRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 
@@ -43,11 +45,22 @@ class SudokuControllerTest extends WebTestCase
     }
 
 
-    public function testHome()
+    public function testHomeWithGameSaved()
     {
+//        $fixture = new SavedSudokuFixtures();
+
         $client = static::createClient();
         $client->request('GET', '/');
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
+    }
+
+
+    public function testHomeWithoutGameSaved()
+    {
+        $client = static::createClient();
+        $client->request('GET', '/');
+        $this->assertTrue($client->getResponse()->isRedirect('/new-game'),
+            "L'utilisateur doit etre redirigé automatiquement depuis l'accueil vers la page de création de partie s'il n'y a aucune sauvegarde.");
     }
 
 
@@ -104,6 +117,44 @@ class SudokuControllerTest extends WebTestCase
         $client = static::createClient();
         $client->request('GET', '/generate', ['difficulty' => $difficulty]);
         $this->assertEquals(500, $client->getResponse()->getStatusCode());
+    }
+
+
+
+    public function testEnterValueWithoutPosition()
+    {
+        $client = static::createClient();
+        $client->request('GET', '/enter-value', ['value' => 1]);
+
+        $this->assertEquals(500, $client->getResponse()->getStatusCode());
+
+        //$this->assertEquals("Le paramètre x, y ou value est manquant.", $client->getResponse()->getContent());
+    }
+
+    public function testEnterValueWithoutValue()
+    {
+        $client = static::createClient();
+        $client->request('GET', '/enter-value', ['x' => 1, 'y' => 1]);
+        $this->assertEquals(500, $client->getResponse()->getStatusCode());
+        //$this->assertEquals("Le paramètre x, y ou value est manquant.", $client->getResponse()->getContent());
+    }
+
+
+    public function testValidEntry()
+    {
+
+        $client = static::createClient();
+        $client->request('GET', '/valid-entry');
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+    }
+
+
+    public function testWrongEntry()
+    {
+
+        $client = static::createClient();
+        $client->request('GET', '/wrong-entry');
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
     }
 
 

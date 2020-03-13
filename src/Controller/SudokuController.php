@@ -43,8 +43,6 @@ class SudokuController extends AbstractController
      */
     public function home()
     {
-
-
         return $this->render('sudoku/index.html.twig', [
             'controller_name' => 'SudokuController',
         ]);
@@ -120,6 +118,11 @@ class SudokuController extends AbstractController
      */
     public function enterValue(Request $request)
     {
+
+        if (!($request->query->has('x') && $request->query->has('y') && $request->query->has('value'))) {
+            throw new \Exception("Le paramètre x, y ou value est manquant.");
+        }
+
         $x = $request->query->get('x');
         $y = $request->query->get('y');
         $value = $request->query->get('value');
