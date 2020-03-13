@@ -19,10 +19,32 @@ class SudokuController extends AbstractController
     private $sudoku;
 
     /**
+     * @var SudokuRepository $sudokuRepository
+     */
+    private $sudokuRepository;
+
+
+    public function __construct(SudokuRepository $sudokuRepository)
+    {
+        $this->sudokuRepository = $sudokuRepository;
+
+        $data = $this->sudokuRepository->findAll();
+        $this->sudoku = empty($data) ? null : $data[0];
+        if ($this->sudoku !== null) {
+
+            $this->sudoku->deserializeData();
+        }
+
+    }
+
+
+    /**
      * @Route("/", name="home")
      */
     public function home()
     {
+
+
         return $this->render('sudoku/index.html.twig', [
             'controller_name' => 'SudokuController',
         ]);
@@ -30,13 +52,14 @@ class SudokuController extends AbstractController
 
     /**
      * @Route("/play", name="play")
-     * @param SudokuRepository $sudokuRepository
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function play(SudokuRepository $sudokuRepository)
+    public function play()
     {
-        $this->sudoku = $sudokuRepository->findAll()[0];
-        $this->sudoku->deserializeData();
+        if ($this->sudoku === null || empty($this->sudoku->getData())) {
+            throw new \LogicException("Impossible de jouer, la grille n'a pas encore été générée.");
+        }
+
 
         return $this->render('sudoku/game.html.twig', [
             'controller_name' => 'SudokuController',
@@ -58,22 +81,19 @@ class SudokuController extends AbstractController
     /**
      * @Route("/generate", name="generate")
      * @param Request $request
-     * @param SudokuRepository $sudokuRepository
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      * @throws \Exception
      */
-    public function generate(Request $request, SudokuRepository $sudokuRepository)
+    public function generate(Request $request)
     {
-        $this->sudoku = new Sudoku();
         if (!$request->query->has("difficulty")) {
             throw new \Exception("Aucune difficulté renseigné en paramètre.");
         }
-
+        $this->sudoku = new Sudoku();
         $this->sudoku->initializeGame($request->query->get("difficulty"));
-        $sudokuRepository->init($this->sudoku);
+        $this->sudokuRepository->init($this->sudoku);
 
         return $this->redirectToRoute('play');
-
     }
 
 
@@ -95,18 +115,14 @@ class SudokuController extends AbstractController
     /**
      * @Route("/enter-value", name="enter_value")
      * @param Request $request
-     * @param SudokuRepository $sudokuRepository
      * @return Response
      * @throws \Exception
      */
-    public function enterValue(Request $request, SudokuRepository $sudokuRepository)
+    public function enterValue(Request $request)
     {
         $x = $request->query->get('x');
         $y = $request->query->get('y');
         $value = $request->query->get('value');
-
-        $this->sudoku = $sudokuRepository->findAll()[0];
-        $this->sudoku->deserializeData();
 
         if ($this->sudoku === null) {
             throw new \Exception("Vous ne pouvez jouez alors que la grille n'a pas encore été générée.");
@@ -115,10 +131,9 @@ class SudokuController extends AbstractController
         $canPlay = $this->sudoku->verifyCell($x, $y, $value);
         if ($canPlay) {
             $this->sudoku->play($x, $y, $value);
-            $sudokuRepository->save($this->sudoku);
+            $this->sudokuRepository->save($this->sudoku);
             return $this->redirectToRoute('valid_entry');
         }
-
 
         return $this->redirectToRoute('wrong_entry');
     }

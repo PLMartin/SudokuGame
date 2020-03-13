@@ -3,6 +3,8 @@
 
 namespace Tests\Controller;
 
+use App\Controller\SudokuController;
+use App\Repository\SudokuRepository;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 
@@ -10,8 +12,31 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 class SudokuControllerTest extends WebTestCase
 {
 
+    private $sudokuController;
+
+
+    protected function setUp(): void
+    {
+        $sudokuRepository = $this->createPartialMock(SudokuRepository::class, ['findAll', 'init', 'save']);
+
+        $sudokuRepository->expects($this->any())
+            ->method('init')
+            ->willReturn(null);
+
+        $sudokuRepository->expects($this->any())
+            ->method('save')
+            ->willReturn(null);
+
+        $sudokuRepository->expects($this->any())
+            ->method('findAll')
+            ->willReturn([]);
+
+        $this->sudokuController = new SudokuController($sudokuRepository);
+    }
+
     public function testNewGame()
     {
+
         $client = static::createClient();
         $client->request('GET', '/new-game');
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
@@ -27,11 +52,11 @@ class SudokuControllerTest extends WebTestCase
 
 
 
-    public function testPlay()
+    public function testPlayWithoutSudokuGenerated()
     {
         $client = static::createClient();
         $client->request('GET', '/play');
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertEquals(500, $client->getResponse()->getStatusCode());
     }
 
 
@@ -54,9 +79,10 @@ class SudokuControllerTest extends WebTestCase
      * @dataProvider validDifficultyProvider
      * @param $difficulty
      */
-    public function testRedirectionAfterGenerateSudokuWithGoodDifficulty($difficulty)
+    public function testRedirectionAfterGenerateSudokuWithValidDifficulty($difficulty)
     {
         $client = static::createClient();
+
         $client->request('GET', '/generate', ['difficulty' => $difficulty]);
         $this->assertEquals(302, $client->getResponse()->getStatusCode());
     }

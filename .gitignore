@@ -7,12 +7,14 @@
 /public/bundles/
 /var/
 /vendor/
+.idea/
 ###< symfony/framework-bundle ###
 
 ###> symfony/phpunit-bridge ###
 .phpunit
 .phpunit.result.cache
 /phpunit.xml
+/tests/coverage/
 ###< symfony/phpunit-bridge ###
 
 ###> symfony/webpack-encore-bundle ###

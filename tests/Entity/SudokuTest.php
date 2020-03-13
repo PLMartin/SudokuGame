@@ -11,9 +11,9 @@ class SudokuTest extends TestCase
 
     public function validDifficultyProvider()
     {
-        yield [1, 50];
-        yield [2, 40];
-        yield [3, 30];
+        yield [1, 40];
+        yield [2, 30];
+        yield [3, 20];
     }
 
     /**
