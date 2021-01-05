@@ -21,7 +21,7 @@
   "dependencies": {
     "@trevoreyre/autocomplete-vue": "^2.0.4",
     "autoprefixer": "^9.7.3",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "chart.js": "^2.9.3",
     "jquery": "^3.4.1",
     "lottie-web": "^5.6.4",
